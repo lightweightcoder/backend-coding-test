@@ -10,11 +10,11 @@ Data can be queried using GET or POST requests. For example, a HTTP-GET request 
 
 ### GET requests
 
-#### health
+#### 1. health
 
 Tests if the api is running. Responds with the string 'Healthy' if the api is running.
 
-#### rides
+#### 2. rides
 
 Responds with an array of rides stored in the database. A ride object contains the following properties:
 
@@ -71,7 +71,7 @@ If a database error occured, responds with the following:
 }
 ```
 
-#### rides/:id
+#### 3. rides/:id
 
 Responds with a ride object of the rideID equal to the 'id' query parameter.
 
@@ -95,7 +95,7 @@ If a database error occured, responds with the following:
 
 ### POST requests
 
-#### rides
+#### 1. rides
 
 Attempt to add a new ride data to the database and return all columns of the newly created data.
 
