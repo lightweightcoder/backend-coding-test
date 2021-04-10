@@ -79,7 +79,7 @@ module.exports = (db) => {
                 });
             }
 
-            // Query the rides tables for all rides.
+            // Query the rides tables for the newly created ride.
             db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, function (err, rows) {
                 if (err) {
                     return res.send({
