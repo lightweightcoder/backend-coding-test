@@ -16,6 +16,7 @@ describe('API tests', () => {
 
       buildSchemas(db);
 
+      // Let Mocha know that the 'before' test is completed.
       done();
     });
   });
