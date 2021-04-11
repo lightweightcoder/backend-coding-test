@@ -21,6 +21,9 @@
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
+    "eslint": "^7.24.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2"
   }
