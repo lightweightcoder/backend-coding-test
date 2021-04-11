@@ -1,7 +1,0 @@
-#!/usr/bin/env node
-/**
- * The above code tells the shell to search for the 1st match of node in $PATH
- * meaning that the code below will be excuted with node
- */
-const util = require('util');
-

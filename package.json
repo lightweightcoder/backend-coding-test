@@ -10,11 +10,6 @@
     "test": "nyc mocha tests",
     "start": "node index.js"
   },
-  "config": {
-    "ghooks": {
-      "pre-push": "npm test"
-    }
-  },
   "keywords": [
     "Xendit"
   ],
