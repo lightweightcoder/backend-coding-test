@@ -80,8 +80,8 @@ module.exports = (db) => {
       }
 
       // Query the rides tables for the newly created ride.
-      db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (err, rows) => {
-        if (err) {
+      db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (selectErr, rows) => {
+        if (selectErr) {
           return res.send({
             error_code: 'SERVER_ERROR',
             message: 'Unknown error',
