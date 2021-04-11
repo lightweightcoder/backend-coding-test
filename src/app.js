@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const express = require('express');
 
 const app = express();
@@ -70,7 +71,8 @@ module.exports = (db) => {
     const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
 
     // Attempt to insert a new ride into the rides table.
-    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, (err) => {
+    // Using values (2nd argument) automatically sanitises the values.
+    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)', values, function (err) {
       // If an error occured, sent an error response.
       if (err) {
         return res.send({
@@ -80,8 +82,8 @@ module.exports = (db) => {
       }
 
       // Query the rides tables for the newly created ride.
-      db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (err, rows) => {
-        if (err) {
+      db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, (selectErr, rows) => {
+        if (selectErr) {
           return res.send({
             error_code: 'SERVER_ERROR',
             message: 'Unknown error',

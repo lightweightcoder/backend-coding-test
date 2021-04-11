@@ -6,6 +6,7 @@ const db = new sqlite3.Database(':memory:');
 
 const buildSchemas = require('./src/schemas');
 
+// Serialize ensures that only 1 database query can be executed at a time to prevent data corruption.
 db.serialize(() => {
   buildSchemas(db);
 
