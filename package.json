@@ -10,6 +10,11 @@
     "test": "nyc mocha tests",
     "start": "node index.js"
   },
+  "config": {
+    "ghooks": {
+      "pre-push": "npm test"
+    }
+  },
   "keywords": [
     "Xendit"
   ],
@@ -24,6 +29,7 @@
     "eslint": "^7.24.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "ghooks": "^2.0.4",
     "mocha": "^6.1.4",
     "nyc": "^15.1.0",
     "supertest": "^4.0.2"
