@@ -42,6 +42,9 @@ describe('API tests', () => {
           // If there are 10 rides, pass the test.
           if (arrayLength === 10) {
             done();
+          } else if (response.body.error_code) {
+            // Else throw the error if there the app encounters an error
+            throw new Error(response.body.error_code);
           } else {
             // Else throw error to catch
             throw new Error('number of rides is not 10');
@@ -64,6 +67,9 @@ describe('API tests', () => {
             if (response.body[0].riderName === 'rider1') {
               done();
             }
+          } else if (response.body.error_code) {
+            // Else throw the error if there the app encounters an error
+            throw new Error(response.body.error_code);
           } else {
             // Else throw error to catch
             throw new Error('wrong/no rider found');
