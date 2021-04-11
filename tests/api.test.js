@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const request = require('supertest');
 
 const sqlite3 = require('sqlite3').verbose();
