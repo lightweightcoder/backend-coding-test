@@ -7,6 +7,8 @@ const db = new sqlite3.Database(':memory:');
 const app = require('../src/app')(db);
 const buildSchemas = require('../src/schemas');
 
+console.log('testing..');
+
 describe('API tests', () => {
   before((done) => {
     db.serialize((err) => {
