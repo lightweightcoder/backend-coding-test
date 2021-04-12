@@ -11,6 +11,9 @@ const jsonParser = bodyParser.json();
 // The rides controller performs database queries.
 const initRidesController = require('../controllers/rides.js');
 
+// Get the helper function to validate form fields of a new ride.
+const { validateNewRideInputs } = require('./helper');
+
 module.exports = (db) => {
   // initialise the controllers
   const ridesController = initRidesController(db);
@@ -20,59 +23,12 @@ module.exports = (db) => {
 
   // Route to add a ride into the rides table of the database.
   app.post('/rides', jsonParser, async (req, res) => {
-    // Get the ride details from the request body
-    const startLatitude = Number(req.body.start_lat);
-    const startLongitude = Number(req.body.start_long);
-    const endLatitude = Number(req.body.end_lat);
-    const endLongitude = Number(req.body.end_long);
-    const riderName = req.body.rider_name;
-    const driverName = req.body.driver_name;
-    const driverVehicle = req.body.driver_vehicle;
+    // Validate the form fields of the new ride to be added.
+    const validationResult = validateNewRideInputs(req.body);
 
-    /**
-     * Return an error code and message if start latitude or/and longitude are not
-     * between -90 - 90 and -180 to 180 degrees respectively.
-     */
-    if (startLatitude < -90 || startLatitude > 90 || startLongitude < -180 || startLongitude > 180) {
-      return res.send({
-        error_code: 'VALIDATION_ERROR',
-        message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
-      });
-    }
-
-    /**
-     * Return an error code and message if end latitude or/and longitude are not
-     * between -90 - 90 and -180 to 180 degrees respectively.
-     */
-    if (endLatitude < -90 || endLatitude > 90 || endLongitude < -180 || endLongitude > 180) {
-      return res.send({
-        error_code: 'VALIDATION_ERROR',
-        message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
-      });
-    }
-
-    // Return an error and message if rider name is not a string or an empty string.
-    if (typeof riderName !== 'string' || riderName.length < 1) {
-      return res.send({
-        error_code: 'VALIDATION_ERROR',
-        message: 'Rider name must be a non empty string',
-      });
-    }
-
-    // Return an error and message if driver name is not a string or an empty string.
-    if (typeof driverName !== 'string' || driverName.length < 1) {
-      return res.send({
-        error_code: 'VALIDATION_ERROR',
-        message: 'Rider name must be a non empty string',
-      });
-    }
-
-    // Return an error and message if vehicle is not a string or an empty string.
-    if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
-      return res.send({
-        error_code: 'VALIDATION_ERROR',
-        message: 'Rider name must be a non empty string',
-      });
+    // If there is a validation error, return the error object to the response
+    if (validationResult.error_code) {
+      return res.send(validationResult);
     }
 
     const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];

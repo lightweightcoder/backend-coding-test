@@ -11,7 +11,11 @@ const sqlite3 = require('sqlite3').verbose();
 const initApp = require('../src/app');
 
 let app;
+
 const buildSchemas = require('../src/schemas');
+
+// Get the helper function to validate form fields of a new ride.
+const { validateNewRideInputs } = require('../src/helper');
 
 // Create logger using winston.createLogger.
 const logger = winston.createLogger({
@@ -52,6 +56,7 @@ describe('API tests', () => {
 
         buildSchemas(db);
 
+        // Pass in the database instance and initialise the routes in the express app.
         app = initApp(db);
 
         // Let Mocha know that the 'before' test is completed.
@@ -237,6 +242,76 @@ describe('API tests', () => {
 
           done(err);
         });
+    });
+  });
+});
+
+describe('Validation tests for a new ride', () => {
+  describe('Inputs without errors', () => {
+    it('returned object should have an error_code == null', (done) => {
+      const newRide = {
+        start_lat: -70,
+        start_long: 90,
+        end_lat: -75,
+        end_long: 95,
+        rider_name: 'newRider',
+        driver_name: 'newDriver',
+        driver_vehicle: 'Toyota',
+      };
+
+      const validationResult = validateNewRideInputs(newRide);
+
+      if (validationResult.error_code !== null) {
+        // Log the error in error.log
+        logger.log({
+          level: 'error',
+          message: validationResult.message,
+        });
+
+        // Fail the test
+        try {
+          throw new Error(validationResult.message);
+        } catch (err) {
+          done(err);
+        }
+      } else {
+        // Pass the test
+        done();
+      }
+    });
+  });
+
+  describe('Inputs with errors', () => {
+    it('returned object should have an error_code == validation error', (done) => {
+      const newRide = {
+        start_lat: -70,
+        start_long: 90,
+        end_lat: -75,
+        end_long: 95,
+        rider_name: 'newRider',
+        driver_name: 1,
+        driver_vehicle: 'Toyota',
+      };
+
+      const validationResult = validateNewRideInputs(newRide);
+
+      if (validationResult.error_code === 'VALIDATION_ERROR') {
+        // Pass the test
+        done();
+      } else {
+        // Log the error in error.log
+        logger.log({
+          level: 'error',
+          message: validationResult.message,
+        });
+
+        // Fail the test
+        try {
+          throw new Error('No validation error detected.');
+        } catch (err) {
+          done(err);
+        }
+      }
     });
   });
 });
