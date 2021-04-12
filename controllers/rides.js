@@ -36,10 +36,10 @@ module.exports = (db) => {
     try {
       // Query the rides tables for a ride.
       // This statement below uses parameterized queries (i.e. using ? and rideId) to prevent SQL injection.
-      // const retrieveRideResult = await db.all('SELECT * FROM Rides WHERE rideID = ?', rideId);
+      const retrieveRideResult = await db.all('SELECT * FROM Rides WHERE rideID = ?', rideId);
 
       // This statement below does not prevent SQL injection.
-      const retrieveRideResult = await db.all(`SELECT * FROM Rides WHERE rideID = ${rideId}`);
+      // const retrieveRideResult = await db.all(`SELECT * FROM Rides WHERE rideID = ${rideId}`);
 
       // If no ride was found, return an error object
       if (retrieveRideResult.length === 0) {
