@@ -7,6 +7,11 @@ const bodyParser = require('body-parser');
 
 const jsonParser = bodyParser.json();
 
+const store = require('./store');
+
+// Get the number of rides per page
+const { RIDES_PER_PAGE } = store;
+
 module.exports = (db) => {
   // Route to test if the server is running.
   app.get('/health', (req, res) => res.send('Healthy'));
@@ -98,8 +103,16 @@ module.exports = (db) => {
 
   // Route to retrieve all rides from the database.
   app.get('/rides', (req, res) => {
-    // Query the rides table for all rides.
-    db.all('SELECT * FROM Rides', (err, rows) => {
+    // Get the page number from query parameter.
+    const page = Number(req.query.page);
+
+    // Calculate which rideID to begin retrieving rides.
+    const startingRideId = (page - 1) * RIDES_PER_PAGE + 1;
+
+    const values = [startingRideId, RIDES_PER_PAGE];
+
+    // Query the rides table for rides for that page.
+    db.all('SELECT * FROM Rides WHERE rideID >= ?1 ORDER BY rideID LIMIT ?2', values, (err, rows) => {
       // If an error occured, sent an error response.
       if (err) {
         return res.send({
