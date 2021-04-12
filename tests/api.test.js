@@ -244,6 +244,38 @@ describe('API tests', () => {
         });
     });
   });
+
+  describe('SQL injection to using GET /rides/1%20UNION%20SELECT%20*%20FROM%20Rides%20LIMIT%203--', () => {
+    it('should return an error', (done) => {
+      request(app)
+        // This SQL injection query will retrieve 3 rides from the rides table.
+        .get('/rides/1%20UNION%20SELECT%20*%20FROM%20Rides%20LIMIT%203--')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          // If the response has an error_code, means the SQL injection did not work.
+          if (response.body.error_code) {
+            // Pass the test.
+            done();
+          } else if (response.body.length === 3) {
+            // Else throw error to catch
+            throw new Error('SQL injection succeeded.');
+          } else {
+            // Else throw error to catch
+            throw new Error('Some unforseen response was returned.');
+          }
+        })
+        .catch((err) => {
+          // Log the error in error.log
+          logger.log({
+            level: 'error',
+            message: err.message,
+          });
+
+          done(err);
+        });
+    });
+  });
 });
 
 describe('Validation tests for a new ride', () => {
