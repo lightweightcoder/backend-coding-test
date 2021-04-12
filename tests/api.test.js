@@ -55,24 +55,56 @@ describe('API tests', () => {
     });
   });
 
-  describe('GET /rides', () => {
-    it('should return an array of length equal 10', (done) => {
+  describe('GET /rides?page=1', () => {
+    it('should return an array of length equal 3', (done) => {
       request(app)
-        .get('/rides')
+        .get('/rides?page=1')
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
           const arrayLength = response.body.length;
 
-          // If there are 10 rides, pass the test.
-          if (arrayLength === 10) {
+          // If there are 3 rides, pass the test.
+          // It is 3 because it is setup this way in ../src/store.js
+          if (arrayLength === 3) {
             done();
           } else if (response.body.error_code) {
-            // Else throw the error if there the app encounters an error
+            // Else throw the error if the app encounters an error
             throw new Error(response.body.error_code);
           } else {
             // Else throw error to catch
-            throw new Error('number of rides is not 10');
+            throw new Error('number of rides in page 1 is not 3');
+          }
+        })
+        .catch((err) => {
+          // Log the error in error.log
+          logger.log({
+            level: 'error',
+            message: err.message,
+          });
+
+          done(err);
+        });
+    });
+  });
+
+  describe('GET /rides?page=5', () => {
+    it('should return the error message - could not find any rides', (done) => {
+      request(app)
+        .get('/rides?page=5')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          // If there are 3 rides, pass the test.
+          // It is 3 because it is setup this way in ../src/store.js
+          if (response.body.error_code === 'RIDES_NOT_FOUND_ERROR') {
+            done();
+          } else if (response.body.error_code) {
+            // Else throw the error if the app encounters another error
+            throw new Error(response.body.error_code);
+          } else {
+            // Else throw error to catch
+            throw new Error('Unexpected behaviour in GET /rides?page=5 - no error_code is found in response.');
           }
         })
         .catch((err) => {
@@ -101,7 +133,7 @@ describe('API tests', () => {
               done();
             }
           } else if (response.body.error_code) {
-            // Else throw the error if there the app encounters an error
+            // Else throw the error if the app encounters an error
             throw new Error(response.body.error_code);
           } else {
             // Else throw error to catch
@@ -149,7 +181,7 @@ describe('API tests', () => {
               throw new Error(`newly created riderName is not 'newRider' but '${response.body[0].riderName}'`);
             }
           } else if (response.body.error_code) {
-            // Else throw the error if there the app encounters an error
+            // Else throw the error if the app encounters an error
             throw new Error(response.body.error_code);
           } else {
             // Else throw an error
