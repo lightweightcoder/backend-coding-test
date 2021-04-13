@@ -1,0 +1,39 @@
+config:
+  target: "http://localhost:8010"
+  phases:
+    # Create 100 virtual users every second (100rps) for 30 seconds:
+    - duration: 30
+      arrivalRate: 100
+      name: sustained load
+# Virtual users will run one of these scenarios.
+scenarios:
+  # Test the health of the app
+  - name: "test GET /health endpoint"
+    flow:
+      - get:
+          url: "/health"
+  # Test the endpoint to get rides of a page.
+  - name: "test GET /rides?page=1 endpoint"
+    flow:
+      - get:
+          url: "/rides?page=1"
+  # Test the endpoint to get a single ride.
+  - name: "test GET /rides/1 endpoint"
+    flow:
+      - get:
+          url: "/rides/1"
+  # Test the endpoint to create a new ride.
+  - name: "test POST /rides endpoint"
+    flow:
+      - post:
+          url: "/rides"
+          headers:
+            Content-Type: "application/json"
+          json:
+            start_lat: -70
+            start_long: 90
+            end_lat: -75
+            end_long: 95
+            rider_name: "newRider"
+            driver_name: "newDriver"
+            driver_vehicle: "Toyota"
