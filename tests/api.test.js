@@ -48,7 +48,7 @@ describe('API tests', () => {
         // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed serializing database in api.test.js. Error message: ${err.message}`,
           });
 
           return done(err);
@@ -99,7 +99,7 @@ describe('API tests', () => {
           // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed test for GET request: /rides?page=1. Expected response to return an array of length equal 3. Error message: ${err.message}`,
           });
 
           done(err);
@@ -128,7 +128,7 @@ describe('API tests', () => {
           // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed test for GET request: /rides?page=5. Expected response to return an array of length equal 3. Error message: ${err.message}`,
           });
 
           done(err);
@@ -156,7 +156,7 @@ describe('API tests', () => {
           // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed test for GET request: /rides?page=hello. Expected response to return an object with a property 'error_code' == VALIDATION_ERROR. Error message: ${err.message}`,
           });
 
           done(err);
@@ -189,7 +189,7 @@ describe('API tests', () => {
           // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed test for POST request: /rides. Expected a response with an array of length 1. Error message: ${err.message}`,
           });
 
           done(err);
@@ -237,7 +237,7 @@ describe('API tests', () => {
           // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed test for POST request: /rides. Expected a response with an array of length 1. Error message: ${err.message}`,
           });
 
           done(err);
@@ -269,7 +269,7 @@ describe('API tests', () => {
           // Log the error in error.log
           logger.log({
             level: 'error',
-            message: err.message,
+            message: `Failed test for SQL injection test using GET REQUEST: /rides/1%20UNION%20SELECT%20*%20FROM%20Rides%20LIMIT%203--. Expected response to return an object with a property 'error_code' but received none. Error message: ${err.message}.`,
           });
 
           done(err);
@@ -297,7 +297,7 @@ describe('Validation tests for a new ride', () => {
         // Log the error in error.log
         logger.log({
           level: 'error',
-          message: validationResult.message,
+          message: `Failed validation test for a new ride. Input should not have errors and expected returned object to have a property 'error_code' == null and no error message. Error message: ${validationResult.message}.`,
         });
 
         // Fail the test
@@ -321,7 +321,7 @@ describe('Validation tests for a new ride', () => {
         end_lat: -75,
         end_long: 95,
         rider_name: 'newRider',
-        driver_name: 1,
+        driver_name: 'a',
         driver_vehicle: 'Toyota',
       };
 
@@ -334,7 +334,7 @@ describe('Validation tests for a new ride', () => {
         // Log the error in error.log
         logger.log({
           level: 'error',
-          message: validationResult.message,
+          message: 'Failed validation test for a new ride. Input should have errors and expected returned object to have a property \'error_code\' == validation error and error message of \'Driver name must be a non empty string\'. But inputs passed validation test instead.',
         });
 
         // Fail the test
