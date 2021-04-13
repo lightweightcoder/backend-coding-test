@@ -4,8 +4,6 @@ const port = 8010;
 
 const sqlite3 = require('sqlite3').verbose();
 
-// const db = new sqlite3.Database(':memory:');
-
 const buildSchemas = require('./src/schemas');
 
 // Run this async function.

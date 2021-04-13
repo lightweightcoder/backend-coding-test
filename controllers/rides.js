@@ -14,13 +14,13 @@ module.exports = (db) => {
    */
   async function addNewRide(values) {
     try {
-    // Attempt to insert a new ride into the rides table.
-    // Using values (2nd argument) automatically sanitises the values.
+      // Attempt to insert a new ride into the rides table.
+      // Using values (2nd argument) automatically sanitises the values.
       const addNewRideResult = await db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)', values);
 
       return addNewRideResult;
     } catch (error) {
-    // If a database error occurred, return an error.
+      // If a database error occurred, return an error.
       return {
         error_code: 'SERVER_ERROR',
         message: 'Unknown error',
@@ -52,7 +52,7 @@ module.exports = (db) => {
       // Return the ride's data.
       return retrieveRideResult;
     } catch (error) {
-    // If a database error occurred, return an error.
+      // If a database error occurred, return an error.
       return {
         error_code: 'SERVER_ERROR',
         message: 'Unknown error',
@@ -65,13 +65,13 @@ module.exports = (db) => {
    * @param {number} page - Page number.
    */
   async function retrieveRides(page) {
-  // Calculate which rideID to begin retrieving rides.
+    // Calculate which rideID to begin retrieving rides.
     const startingRideId = (page - 1) * RIDES_PER_PAGE + 1;
 
     const values = [startingRideId, RIDES_PER_PAGE];
 
     try {
-    // Query the rides table for rides for that page.
+      // Query the rides table for rides for that page.
       const retrieveRidesResult = await db.all('SELECT * FROM Rides WHERE rideID >= ?1 ORDER BY rideID LIMIT ?2', values);
 
       // If no ride was found, return an error object
@@ -85,7 +85,7 @@ module.exports = (db) => {
       // Return the ride's data.
       return retrieveRidesResult;
     } catch (error) {
-    // If a database error occurred, return an error.
+      // If a database error occurred, return an error.
       return {
         error_code: 'SERVER_ERROR',
         message: 'Unknown error',
