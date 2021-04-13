@@ -321,7 +321,7 @@ describe('Validation tests for a new ride', () => {
         end_lat: -75,
         end_long: 95,
         rider_name: 'newRider',
-        driver_name: 'a',
+        driver_name: 1,
         driver_vehicle: 'Toyota',
       };
 
