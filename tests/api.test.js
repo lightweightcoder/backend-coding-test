@@ -35,17 +35,20 @@ const logger = winston.createLogger({
 // Tests
 describe('API tests', () => {
   before((done) => {
-    // Open the database
-    // Docs: https://www.npmjs.com/package/sqlite#opening-the-database
-    open({
-      // Store database in RAM
-      filename: ':memory:',
-      driver: sqlite3.Database,
-    }).then((db) => {
+    // Run this async function.
+    (async () => {
+      // Open the database
+      // Docs: https://www.npmjs.com/package/sqlite#opening-the-database
+      const createDatabase = await open({
+        // Store database in RAM
+        filename: ':memory:',
+        driver: sqlite3.Database,
+      });
+
       // Serialize ensures that only 1 database query can be executed at a time to prevent data corruption.
-      db.getDatabaseInstance().serialize((err) => {
+      createDatabase.getDatabaseInstance().serialize((err) => {
         if (err) {
-        // Log the error in error.log
+          // Log the error in error.log
           logger.log({
             level: 'error',
             message: `Failed serializing database in api.test.js. Error message: ${err.message}`,
@@ -54,15 +57,15 @@ describe('API tests', () => {
           return done(err);
         }
 
-        buildSchemas(db);
+        buildSchemas(createDatabase);
 
         // Pass in the database instance and initialise the routes in the express app.
-        app = initApp(db);
+        app = initApp(createDatabase);
 
         // Let Mocha know that the 'before' test is completed.
         done();
       });
-    });
+    })();
   });
 
   describe('GET /health', () => {
